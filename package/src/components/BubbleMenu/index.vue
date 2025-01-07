@@ -35,6 +35,7 @@ import {
   ItalicIcon,
   UnderlineIcon,
   StrikethroughIcon,
+  SigmaIcon,
   CodeIcon,
 } from "lucide-vue-next";
 
@@ -80,6 +81,23 @@ const items = [
     command: () => props.editor.chain().focus().toggleCode().run(),
     icon: CodeIcon,
   },
+  {
+    name: 'math',
+    isActive: () => props.editor.isActive('math'),
+    command: () => {
+      if (props.editor.isActive("math")) {
+        props.editor.chain().focus().unsetLatex().run();
+      } else {
+        const { from, to } = props.editor.state.selection;
+        const latex = props.editor.state.doc.textBetween(from, to);
+
+        if (!latex) return;
+
+        props.editor.chain().focus().setLatex({ latex }).run();
+      }    
+    },
+    icon: SigmaIcon,
+  }
 ];
 </script>
 
