@@ -161,10 +161,12 @@ export const Mathematics = Node.create<MathematicsOptions>({
       });
 
       dom.addEventListener("click", (evt) => {
+        evt.preventDefault();
         if (editor.isEditable && typeof getPos === "function") {
           const pos = getPos();
           const nodeSize = node.nodeSize;
-          editor.commands.setTextSelection({ from: pos, to: pos + nodeSize });
+          editor.commands.focus()//.setTextSelection({ from: pos, to: pos + nodeSize });
+
         }
       });
 

@@ -9,6 +9,10 @@ export default {
           default: ["var(--font-default)", "system-ui", "sans-serif"],
         },
         colors: {
+          accent: {
+            DEFAULT: "hsl(var(--accent))",
+            foreground: "hsl(var(--accent-foreground))",
+          },
           white: "var(--novel-white)",
           stone: {
             50: "var(--novel-stone-50)",

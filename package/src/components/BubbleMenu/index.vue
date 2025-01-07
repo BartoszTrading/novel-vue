@@ -1,9 +1,29 @@
 <template>
   <BubbleMenu
     :editor="editor"
+    :tippyOptions="{
+      delay: 100,
+        placement: openAi ? 'bottom-start' : 'top',
+        onHidden: (e) => {
+          openAi = false;
+          e.hide();
+        },
+      }"
     class="flex bg-white border divide-x rounded shadow-xl w-fit divide-stone-200 border-stone-200"
   >
+    <template v-if="openAi">
+    <AiSelector :editor="editor"/>
+ 
+    </template>
+    <template v-else>
     <div class="flex">
+      <button
+        @click="openAi = true"
+        class="p-2 text-stone-600 hover:bg-stone-100 active:bg-stone-200"
+        type="button"
+      >
+      <Magic class="mr-2 h-4 w-4 shrink-0 text-purple-500" />
+    </button>
       <NodeSelector :editor="editor" />
       <LinkSelector :editor="editor" />
       <button
@@ -23,12 +43,13 @@
       </button>
       <ColorSelector :editor="editor" />
     </div>
+    </template>
   </BubbleMenu>
 </template>
 
 <script setup lang="ts">
 import { BubbleMenu } from "@tiptap/vue-3";
-import { PropType } from "vue";
+import { PropType,ref } from "vue";
 import { Editor } from "@tiptap/core";
 import {
   BoldIcon,
@@ -42,6 +63,10 @@ import {
 import NodeSelector from "./NodeSelector.vue";
 import LinkSelector from "./LinkSelector.vue";
 import ColorSelector from "./ColorSelector.vue";
+import AiSelector from "../Generative/AiSelector.vue";
+import Magic from "../ui/Command/Magic.vue";
+
+const openAi = ref<boolean>(false);
 
 const props = defineProps({
   editor: {

@@ -14,6 +14,8 @@ import { InputRule } from "@tiptap/core";
 import SlashCommand from "./slashExtension";
 import UploadImagesPlugin from "../plugins/upload-images";
 import UpdatedImage from "./updated-image";
+import { Mathematics } from "./mathematics";
+import { cx } from "class-variance-authority";
 
 export const defaultExtensions = [
   StarterKit.configure({
@@ -135,4 +137,12 @@ export const defaultExtensions = [
     transformCopiedText: true,
   }),
   SlashCommand,
+  Mathematics.configure({
+    HTMLAttributes: {
+      class: cx("text-foreground rounded p-1 hover:bg-accent cursor-pointer"),
+    },
+    katexOptions: {
+      throwOnError: false,
+    },
+  }),
 ];
