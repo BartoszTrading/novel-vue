@@ -43,6 +43,7 @@
     "ai": "^2.2.11",
     "katex": "^0.16.19",
     "lucide-vue-next": "^0.274.0",
+    "radix-vue": "^1.9.12",
     "sonner": "npm:vue-sonner@1.0.2",
     "tailwindcss-animate": "^1.0.7",
     "tippy.js": "^6.3.7",
