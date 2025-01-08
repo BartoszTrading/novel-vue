@@ -1,6 +1,6 @@
 <template>
   <div  :class="className">
-    <BubbleMenu v-if="editor" :editor="editor" />
+    <BubbleMenu v-if="editor" :editor="editor" :ai-items="aiItems"/>
     <EditorContent :editor="editor" />
   </div>
   <Toaster />
@@ -17,16 +17,17 @@ import {
 import { EditorProps } from "@tiptap/pm/view";
 import { Editor as EditorClass } from "@tiptap/core";
 import { useStorage, useDebounceFn } from "@vueuse/core";
-import { useCompletion } from "ai/vue";
 
 import { defaultEditorContent } from "../lib/default-content";
 import { defaultExtensions } from "../components/extensions";
 import { defaultEditorProps } from "../lib/props";
 import BubbleMenu from "../components/BubbleMenu/index.vue";
-import { Toaster } from "sonner";
+import { Toaster,toast } from "sonner";
+
 import { getPrevText } from "../lib/editor";
 import { SlashCommandToggles } from "./extensions/slashExtension.types";
 import SlashCommand from "./extensions/slashExtension";
+import { Group } from "./Generative/AiSelectorCommands.types";
 export type CompletionHandler = (eventType: string, text?: string) => Promise<string>;
 
 const props = defineProps({
@@ -101,6 +102,15 @@ const props = defineProps({
     type: Function as PropType<(editor?: EditorClass) => void | Promise<void>>,
     default: () => {},
   },
+  aiItems: {
+    type: Array as PropType<Group[]>,
+    required: false,
+  },
+  completeValue: {
+    type: String,
+    required: false,
+    default:'complete'
+  },
   /**
    * The duration (in milliseconds) to debounce the onDebouncedUpdate callback.
    * Defaults to 750.
@@ -153,12 +163,13 @@ const editor = useEditor({
       chars: 2,
     });
     // Run the completion API if the user types "++" at the end of the document.
-    if (lastTwo === "++" && !isLoading.value) {
+    if (lastTwo === "++" && !isLoading.value && props.generativeHandler) {
       e.editor.commands.deleteRange({
         from: selection.from - 2,
         to: selection.from,
       });
-      complete(
+      completionHandler(
+        props.completeValue,
         getPrevText(e.editor, {
           chars: 5000,
         })
@@ -174,25 +185,62 @@ defineExpose({
   editor,
 });
 
-const { complete, completion, isLoading, stop } = useCompletion({
-  id: "novel-vue",
-  api: props.completionApi,
-  onFinish: (_prompt, completion) => {
-    editor.value?.commands.setTextSelection({
-      from: editor.value.state.selection.from - completion.length,
+
+
+const isLoading = ref(false);
+const completion = ref<string | null>(null);
+
+
+const completionHandler = async (eventType: string, text?: string) => {
+  if (!props.generativeHandler) return;
+
+  isLoading.value = true;
+  completion.value = "";
+
+  try {
+    console.log("completionHandler", eventType, text);
+    const promiseM = props.generativeHandler(eventType, text)
+    // 'toast.promise' returns a Promise that you can await
+    const result =  toast.promise(
+      promiseM, // <-- your actual async function
+      {
+        loading: "Generating...",
+        success: () => "Done!",
+        error: (err) => {
+          // If you want dynamic error messages
+          return err || "An error occurred";
+        },
+      }
+    );
+    console.log(result)
+    // 'result' here is the resolved value of your generativeHandler call
+    // i.e. the AI completion string, or an object, or whatever generativeHandler returns
+    completion.value = await promiseM; // If your generativeHandler returns a string
+  } catch (err) {
+    console.error(err);
+    // Optionally handle any additional error logic here
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+watch(
+  isLoading,
+  (newVal,oldVal) => {
+    if(!newVal && oldVal && completion.value) {
+      editor.value?.commands.setTextSelection({
+      from: editor.value.state.selection.from - completion.value.length,
       to: editor.value.state.selection.from,
     });
-  },
-  onError: (err) => {
-    console.error(err);
-  },
-});
+    }
+  }
+)
 
 // Insert chunks of the generated text
 watch(
   () => completion.value,
   (newCompletion, oldCompletion) => {
-    const diff = newCompletion?.slice(oldCompletion?.length);
+    const diff = newCompletion
     if (diff) {
       editor.value?.commands.insertContent(diff);
     }
@@ -204,7 +252,7 @@ watch(
 const onKeyDown = (e: KeyboardEvent) => {
   if (e.key === "Escape" || (e.metaKey && e.key === "z")) {
     stop();
-    if (e.key === "Escape") {
+    if (e.key === "Escape" && completion.value) {
       editor.value?.commands.deleteRange({
         from: editor.value.state.selection.from - completion.value.length,
         to: editor.value.state.selection.from,
@@ -219,7 +267,7 @@ const mousedownHandler = (e: MouseEvent) => {
   e.stopPropagation();
   stop();
   if (window.confirm("AI writing paused. Continue?")) {
-    complete(editor.value?.getText() || "");
+    completionHandler(editor.value?.getText() || "");
   }
 };
 

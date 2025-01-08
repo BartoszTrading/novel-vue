@@ -30,13 +30,6 @@ import CommandSeparator from "../ui/Command/CommandSeparator.vue"
 import { Group } from "./AiSelectorCommands.types"
 
 
-// Utility function similarly requires a Vue replacement
-function getPrevText(_editor: any, pos: number) {
-  // Mock some logic
-  return "Some previous text near position " + pos
-}
-
-
 
 // ------------------ //
 const props = defineProps<{
@@ -58,11 +51,6 @@ function handleSelect(value: string) {
   emit('select',{text, value})
 }
 
-function handleContinue() {
-  const pos = props.editor.state.selection.from
-  const text = getPrevText(props.editor, pos)
-  emit('select',{text, value: 'value'})
-}
 </script>
 
 <style scoped>

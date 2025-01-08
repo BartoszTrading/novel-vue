@@ -11,7 +11,7 @@
     class="flex bg-white border divide-x rounded shadow-xl w-fit divide-stone-200 border-stone-200"
   >
     <template v-if="openAi">
-    <AiSelector :aiOptions="aiItems" :editor="editor"/>
+    <AiSelector v-if="aiItems" :aiOptions="aiItems" :editor="editor"/>
  
     </template>
     <template v-else>
@@ -57,10 +57,7 @@ import {
   StrikethroughIcon,
   SigmaIcon,
   CodeIcon,
-ArrowDownWideNarrow,
-CheckCheck,
-RefreshCcwDot,
-WrapText,
+
 } from "lucide-vue-next";
 
 import NodeSelector from "./NodeSelector.vue";
@@ -70,7 +67,6 @@ import AiSelector from "../Generative/AiSelector.vue";
 import Magic from "../ui/Command/Magic.vue";
 import { Group } from "../Generative/AiSelectorCommands.types";
 import { removeAIHighlight } from "../extensions/ai-highlight";
-import { CompletionHandler } from "../Editor.vue";
 
 const openAi = ref<boolean>(false);
 
@@ -78,6 +74,9 @@ const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
     required: true,
+  },
+  aiItems: {
+    type: Array as PropType<Group[]>,
   },
  
 });
@@ -139,58 +138,7 @@ const items = [
   }
 ];
 
-const aiItems : Group[] = [
-  {
-    heading: "Edit or review selection",
-    options: [
-      {
-        value: "improve",
-        label: "Improve writing",
-        icon: RefreshCcwDot,
-      },
-      {
-        value: "fix",
-        label: "Fix grammar",
-        icon: CheckCheck,
-      },
-      {
-        value: "shorter",
-        label: "Make shorter",
-        icon: ArrowDownWideNarrow,
-      },
-      {
-        value: "longer",
-        label: "Make longer",
-        icon: WrapText,
-      },
-    ],
-  },
-  {
-    heading: "Use AI to do more",
-    options: [
-      {
-        value: "summarize",
-        label: "Summarize",
-        icon: ArrowDownWideNarrow,
-      },
-      {
-        value: "paraphrase",
-        label: "Paraphrase",
-        icon: ArrowDownWideNarrow,
-      },
-      {
-        value: "translate",
-        label: "Translate",
-        icon: ArrowDownWideNarrow,
-      },
-      {
-        value: "analyze",
-        label: "Analyze",
-        icon: ArrowDownWideNarrow,
-      },
-    ],
-  }
-];
+
 
 </script>
 
