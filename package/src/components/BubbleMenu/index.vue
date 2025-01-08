@@ -2,17 +2,16 @@
   <BubbleMenu
     :editor="editor"
     :tippyOptions="{
-      delay: 100,
         placement: openAi ? 'bottom-start' : 'top',
         onHidden: (e) => {
           openAi = false;
-          e.hide();
+          
         },
       }"
     class="flex bg-white border divide-x rounded shadow-xl w-fit divide-stone-200 border-stone-200"
   >
     <template v-if="openAi">
-    <AiSelector :editor="editor"/>
+    <AiSelector :aiOptions="aiItems" :editor="editor"/>
  
     </template>
     <template v-else>
@@ -49,7 +48,7 @@
 
 <script setup lang="ts">
 import { BubbleMenu } from "@tiptap/vue-3";
-import { PropType,ref } from "vue";
+import { PropType,ref,watch } from "vue";
 import { Editor } from "@tiptap/core";
 import {
   BoldIcon,
@@ -58,6 +57,10 @@ import {
   StrikethroughIcon,
   SigmaIcon,
   CodeIcon,
+ArrowDownWideNarrow,
+CheckCheck,
+RefreshCcwDot,
+WrapText,
 } from "lucide-vue-next";
 
 import NodeSelector from "./NodeSelector.vue";
@@ -65,6 +68,8 @@ import LinkSelector from "./LinkSelector.vue";
 import ColorSelector from "./ColorSelector.vue";
 import AiSelector from "../Generative/AiSelector.vue";
 import Magic from "../ui/Command/Magic.vue";
+import { Group } from "../Generative/AiSelectorCommands.types";
+import { removeAIHighlight } from "../extensions/ai-highlight";
 
 const openAi = ref<boolean>(false);
 
@@ -73,6 +78,13 @@ const props = defineProps({
     type: Object as PropType<Editor>,
     required: true,
   },
+});
+
+watch(openAi, (newVal) => {
+  if (!newVal) {
+    console.log('removing ai highlight')
+   removeAIHighlight(props.editor);
+  }
 });
 
 const items = [
@@ -124,6 +136,60 @@ const items = [
     icon: SigmaIcon,
   }
 ];
+
+const aiItems : Group[] = [
+  {
+    heading: "Edit or review selection",
+    options: [
+      {
+        value: "improve",
+        label: "Improve writing",
+        icon: RefreshCcwDot,
+      },
+      {
+        value: "fix",
+        label: "Fix grammar",
+        icon: CheckCheck,
+      },
+      {
+        value: "shorter",
+        label: "Make shorter",
+        icon: ArrowDownWideNarrow,
+      },
+      {
+        value: "longer",
+        label: "Make longer",
+        icon: WrapText,
+      },
+    ],
+  },
+  {
+    heading: "Use AI to do more",
+    options: [
+      {
+        value: "summarize",
+        label: "Summarize",
+        icon: ArrowDownWideNarrow,
+      },
+      {
+        value: "paraphrase",
+        label: "Paraphrase",
+        icon: ArrowDownWideNarrow,
+      },
+      {
+        value: "translate",
+        label: "Translate",
+        icon: ArrowDownWideNarrow,
+      },
+      {
+        value: "analyze",
+        label: "Analyze",
+        icon: ArrowDownWideNarrow,
+      },
+    ],
+  }
+];
+
 </script>
 
 <style scoped></style>

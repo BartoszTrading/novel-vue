@@ -1,5 +1,5 @@
 <template>
-  <div @click="editor?.chain().focus().run()" :class="className">
+  <div  :class="className">
     <BubbleMenu v-if="editor" :editor="editor" />
     <EditorContent :editor="editor" />
   </div>
@@ -150,7 +150,6 @@ const editor = useEditor({
       debouncedUpdate(e);
     }
   },
-  autofocus: "end",
 });
 
 defineExpose({

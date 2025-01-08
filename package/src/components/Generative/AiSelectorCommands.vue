@@ -1,8 +1,10 @@
 <template>
   <!-- Group 1: Edit or review selection -->
-  <CommandGroup heading="Edit or review selection">
+  <template v-for="group,index in groups">
+  <CommandSeparator v-if="index !== 0" />
+  <CommandGroup  :heading="group.heading">
     <CommandItem
-      v-for="option in options"
+      v-for="option in group.options"
       :key="option.value"
       :value="option.value"
       class="flex gap-2 px-4"
@@ -14,20 +16,9 @@
     </CommandItem>
   </CommandGroup>
 
-  <CommandSeparator />
+  </template>
 
-  <!-- Group 2: Use AI to do more -->
-  <CommandGroup heading="Use AI to do more">
-    <CommandItem
-      value="continue"
-      class="gap-2 px-4"
-      @select="handleContinue"
-    >
-      <!-- Replace this with the proper Vue-based Lucide icon component -->
-      <component :is="StepForward" class="h-4 w-4 text-purple-500" />
-      Continue writing
-    </CommandItem>
-  </CommandGroup>
+
 </template>
 
 <script setup lang="ts">
@@ -37,6 +28,7 @@ import { defineProps } from "vue"
 import CommandGroup from "../ui/Command/CommandGroup.vue"
 import CommandItem from "../ui/Command/CommandItem.vue"
 import CommandSeparator from "../ui/Command/CommandSeparator.vue"
+import { Group } from "./AiSelectorCommands.types"
 
 
 // Utility function similarly requires a Vue replacement
@@ -45,49 +37,12 @@ function getPrevText(_editor: any, pos: number) {
   return "Some previous text near position " + pos
 }
 
-// If CommandGroup, CommandItem, CommandSeparator are Vue components, import them here:
-// import CommandGroup from '../ui/command/CommandGroup.vue'
-// import CommandItem from '../ui/command/CommandItem.vue'
-// import CommandSeparator from '../ui/command/CommandSeparator.vue'
 
-// ------------------ //
-// Options definition
-// ------------------ //
-interface Option {
-  value: string
-  label: string
-  icon: any
-}
 
-const options: Option[] = [
-  {
-    value: "improve",
-    label: "Improve writing",
-    icon: RefreshCcwDot,
-  },
-  {
-    value: "fix",
-    label: "Fix grammar",
-    icon: CheckCheck,
-  },
-  {
-    value: "shorter",
-    label: "Make shorter",
-    icon: ArrowDownWideNarrow,
-  },
-  {
-    value: "longer",
-    label: "Make longer",
-    icon: WrapText,
-  },
-]
-
-// ------------------ //
-// Props + Setup
 // ------------------ //
 const props = defineProps<{
   editor:  Editor
-
+  groups: Group[]
 }>()
 
 const emit = defineEmits(["select"])

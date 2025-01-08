@@ -16,6 +16,7 @@ import UploadImagesPlugin from "../plugins/upload-images";
 import UpdatedImage from "./updated-image";
 import { Mathematics } from "./mathematics";
 import { cx } from "class-variance-authority";
+import { AIHighlight } from "./ai-highlight";
 
 export const defaultExtensions = [
   StarterKit.configure({
@@ -91,6 +92,7 @@ export const defaultExtensions = [
         "text-stone-400 underline underline-offset-[3px] hover:text-stone-600 transition-colors cursor-pointer",
     },
   }),
+  AIHighlight,
   TiptapImage.extend({
     addProseMirrorPlugins() {
       return [UploadImagesPlugin()];
@@ -133,7 +135,7 @@ export const defaultExtensions = [
     nested: true,
   }),
   Markdown.configure({
-    html: false,
+    html: true,
     transformCopiedText: true,
   }),
   SlashCommand,
