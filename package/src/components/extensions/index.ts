@@ -11,7 +11,6 @@ import TaskList from "@tiptap/extension-task-list";
 import { Markdown } from "tiptap-markdown";
 import Highlight from "@tiptap/extension-highlight";
 import { InputRule } from "@tiptap/core";
-import SlashCommand from "./slashExtension";
 import UploadImagesPlugin from "../plugins/upload-images";
 import UpdatedImage from "./updated-image";
 import { Mathematics } from "./mathematics";
@@ -135,10 +134,9 @@ export const defaultExtensions = [
     nested: true,
   }),
   Markdown.configure({
-    html: true,
+    html: false,
     transformCopiedText: true,
   }),
-  SlashCommand,
   Mathematics.configure({
     HTMLAttributes: {
       class: cx("text-foreground rounded p-1 hover:bg-accent cursor-pointer"),

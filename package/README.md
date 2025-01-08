@@ -39,4 +39,5 @@ import "novel-vue/dist/style.css";
 | debounceDuration  | Number      | The duration (in milliseconds) to debounce the onDebouncedUpdate callback.                                       | 750                                                                                                                                                         |
 | storageKey        | String      | The key to use for storing the editor's value in local storage.                                                  | "novel\_\_content"                                                                                                                                          |
 
+
 > **Note**: Make sure to define an API endpoint that matches the `completionApi` prop (default is `/api/generate`). This is needed for the AI autocompletions to work. Here's an example: https://github.com/naveennaidu/novel-vue/blob/main/nuxt-server/server/api/generate.ts

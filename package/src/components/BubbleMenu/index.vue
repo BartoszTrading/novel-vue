@@ -3,7 +3,7 @@
     :editor="editor"
     :tippyOptions="{
         placement: openAi ? 'bottom-start' : 'top',
-        onHidden: (e) => {
+        onHidden: () => {
           openAi = false;
           
         },
@@ -70,6 +70,7 @@ import AiSelector from "../Generative/AiSelector.vue";
 import Magic from "../ui/Command/Magic.vue";
 import { Group } from "../Generative/AiSelectorCommands.types";
 import { removeAIHighlight } from "../extensions/ai-highlight";
+import { CompletionHandler } from "../Editor.vue";
 
 const openAi = ref<boolean>(false);
 
@@ -78,6 +79,7 @@ const props = defineProps({
     type: Object as PropType<Editor>,
     required: true,
   },
+ 
 });
 
 watch(openAi, (newVal) => {

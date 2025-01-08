@@ -50,13 +50,18 @@ import { Check, TextQuote, TrashIcon } from 'lucide-vue-next'
 
 interface Props {
   completion: string
-  onDiscard: () => void
+
   editor: Editor
 }
 
 // Read props
-const {completion,editor,onDiscard} = defineProps<Props>()
+const {completion,editor} = defineProps<Props>()
 
+defineEmits(['removeCompletion'])
+
+function onDiscard() {
+  console.log('Discard')
+}
 
 // Action: replace the text in the current selection with `props.completion`
 function replaceSelection() {

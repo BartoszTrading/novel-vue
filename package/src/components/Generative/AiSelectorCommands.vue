@@ -23,7 +23,6 @@
 
 <script setup lang="ts">
 import { Editor } from "@tiptap/core"
-import { RefreshCcwDot, CheckCheck,StepForward, ArrowDownWideNarrow, WrapText } from "lucide-vue-next"
 import { defineProps } from "vue"
 import CommandGroup from "../ui/Command/CommandGroup.vue"
 import CommandItem from "../ui/Command/CommandItem.vue"
@@ -52,7 +51,10 @@ const emit = defineEmits(["select"])
 function handleSelect(value: string) {
   // Extract text from the editor's current selection (mocked logic)
   const slice = props.editor.state.selection.content()
+  console.log(slice)
+  console.log(props.editor.storage.markdown.serializer)
   const text = props.editor.storage.markdown.serializer.serialize(slice.content)
+  console.log(text)
   emit('select',{text, value})
 }
 

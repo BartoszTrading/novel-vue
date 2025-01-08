@@ -15,15 +15,19 @@ import {
   CheckSquare,
   Sparkles,
   Image,
+  Slash,
 } from "lucide-vue-next";
 import SlashCommandList from "./slashCommandList.vue";
 import { startImageUpload } from "../plugins/upload-images";
+import { ALL_SLASH_COMMANDS } from "./slashExtension.items";
+import { getAllowedIdsFromToggles } from "./slashExtension.types";
 // import Magic from "../icons/magic.vue";
 
 const Command = Extension.create({
   name: "slash-command",
   addOptions() {
     return {
+      allowedIds: [] as string[],
       suggestion: {
         char: "/",
         command: ({
@@ -268,11 +272,58 @@ const renderItems = () => {
   };
 };
 
+export function buildSlashItems({
+  query = "",
+  allowedIds,
+}: {
+  query?: string;
+  allowedIds: string[];
+}) {
+
+  let items = ALL_SLASH_COMMANDS
+
+  if (allowedIds && allowedIds.length) {
+    items = items.filter((item) => allowedIds.includes(item.id))
+  }
+
+  // 2) Filter by query (ignore if the user hasn't typed anything yet)
+  if (query.trim().length > 0) {
+    const lower = query.trim().toLowerCase()
+    items = items.filter((item) => {
+      return (
+        item.title.toLowerCase().includes(lower) ||
+        (item.description && item.description.toLowerCase().includes(lower)) ||
+        (item.searchTerms &&
+          item.searchTerms.some((term: string) =>
+            term.toLowerCase().includes(lower),
+          ))
+      )
+    })
+  } else {
+    return items
+  }
+}
+
 const SlashCommand = Command.configure({
+  /**
+   * Example usage:
+   *   toggles: { feedback: false, heading1: true, heading2: false }
+   */
+  toggles: {},
+
   suggestion: {
-    items: getSuggestionItems,
+    // Provide the items function
+    items: function ({ query }: { query: string }) {
+      // Convert toggles to allowedIds
+      const allowedIds = getAllowedIdsFromToggles(this?.toggles)
+      // Then build items using your existing logic
+      return buildSlashItems({
+        query,
+        allowedIds,
+      })
+    },
     render: renderItems,
   },
-});
+})
 
-export default SlashCommand;
+export default SlashCommand

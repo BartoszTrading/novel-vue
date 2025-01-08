@@ -3,6 +3,10 @@ import { ref } from "vue";
 import Editor from "./components/Editor.vue";
 import { Editor as EditorClass } from "@tiptap/core";
 
+const generativeHandler = async(eventType: string, text?: string) => {
+  return "Hello World";
+};
+
 const editor = ref<{ editor: EditorClass }>();
 function setContent() {
   if (editor.value) {
@@ -27,7 +31,7 @@ function setContent() {
 <template>
   <div class="mt-8">
     <button @click="setContent">Set Content</button>
-    <Editor blob-api="http://localhost:3000/api/upload" completion-api="http://localhost:3000/api/generate" ref="editor" />
+    <Editor :generative-handler="generativeHandler" completion="Heeeej" blob-api="http://localhost:3000/api/upload" completion-api="http://localhost:3000/api/generate" ref="editor" />
   </div>
 </template>
 

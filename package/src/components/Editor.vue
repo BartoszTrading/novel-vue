@@ -25,6 +25,9 @@ import { defaultEditorProps } from "../lib/props";
 import BubbleMenu from "../components/BubbleMenu/index.vue";
 import { Toaster } from "sonner";
 import { getPrevText } from "../lib/editor";
+import { SlashCommandToggles } from "./extensions/slashExtension.types";
+import SlashCommand from "./extensions/slashExtension";
+export type CompletionHandler = (eventType: string, text?: string) => Promise<string>;
 
 const props = defineProps({
   /**
@@ -34,6 +37,10 @@ const props = defineProps({
   blobApi: {
     type: String,
     default: "/api/upload",
+  },
+  slashCommands : {
+    type: Object as PropType<SlashCommandToggles>,
+    required: false,
   },
   /**
    * The API route to use for the OpenAI completion API.
@@ -110,10 +117,19 @@ const props = defineProps({
     type: String,
     default: "novel__content",
   },
+  generativeHandler: {
+    type: Function as PropType<CompletionHandler>,
+    required: false,
+  }
+  
 });
 
 provide("completionApi", props.completionApi);
+provide("generativeHandler", props.generativeHandler);
+
 useStorage("blobApi", props.blobApi);
+
+
 
 const content = useStorage(props.storageKey, props.defaultValue);
 
@@ -124,7 +140,9 @@ const debouncedUpdate = useDebounceFn(({ editor }) => {
 }, props.debounceDuration);
 
 const editor = useEditor({
-  extensions: [...defaultExtensions, ...props.extensions],
+  extensions: [...defaultExtensions, ...props.extensions, SlashCommand.configure({
+    toggles: props.slashCommands,
+})],
   editorProps: {
     ...defaultEditorProps,
     ...props.editorProps,
