@@ -38,7 +38,6 @@
 
 <script setup lang="ts">
 import { Editor } from "@tiptap/core"
-import { defineProps } from "vue"
 import CommandGroup from "../ui/Command/CommandGroup.vue"
 import CommandItem from "../ui/Command/CommandItem.vue"
 import CommandSeparator from "../ui/Command/CommandSeparator.vue"
@@ -52,16 +51,14 @@ interface Props {
   completion: string
 
   editor: Editor
+  onDiscard: () => void
 }
 
 // Read props
-const {completion,editor} = defineProps<Props>()
+const {completion,editor,onDiscard} = defineProps<Props>()
 
-defineEmits(['removeCompletion'])
 
-function onDiscard() {
-  console.log('Discard')
-}
+
 
 // Action: replace the text in the current selection with `props.completion`
 function replaceSelection() {

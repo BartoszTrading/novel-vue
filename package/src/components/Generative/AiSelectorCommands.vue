@@ -23,7 +23,6 @@
 
 <script setup lang="ts">
 import { Editor } from "@tiptap/core"
-import { defineProps } from "vue"
 import CommandGroup from "../ui/Command/CommandGroup.vue"
 import CommandItem from "../ui/Command/CommandItem.vue"
 import CommandSeparator from "../ui/Command/CommandSeparator.vue"

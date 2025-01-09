@@ -239,7 +239,7 @@ watch(
 // Insert chunks of the generated text
 watch(
   () => completion.value,
-  (newCompletion, oldCompletion) => {
+  (newCompletion) => {
     const diff = newCompletion
     if (diff) {
       editor.value?.commands.insertContent(diff);

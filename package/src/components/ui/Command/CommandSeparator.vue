@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed } from "vue";
+import {  computed } from "vue";
 import { cn } from "../../../utils/cn";
 import { Command } from 'vue-command-palette'
 

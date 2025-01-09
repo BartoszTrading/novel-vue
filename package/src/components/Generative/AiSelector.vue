@@ -25,7 +25,7 @@
 
     </CommandList>
     </template>
-    <AiCompletionCommands @discard="() => console.log('D')" v-if="completion" :completion="completion"  :editor="editor" />
+    <AiCompletionCommands :onDiscard="() => completion = undefined" v-if="completion" :completion="completion"  :editor="editor" />
   </Command>
 </template>
 <script lang="ts" setup>

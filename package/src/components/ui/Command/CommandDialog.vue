@@ -50,11 +50,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
 import Command from "./Command.vue";
 import { Dialog, TransitionChild } from "@headlessui/vue";
 
-const props = defineProps<{
+ defineProps<{
   modelValue: boolean;
 }>();
 const emits = defineEmits(["update:modelValue"]);

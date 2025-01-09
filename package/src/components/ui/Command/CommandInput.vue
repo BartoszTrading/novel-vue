@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, computed,onMounted } from "vue";
+import {   computed,onMounted } from "vue";
 import { cn } from "../../../utils/cn";
 import { Command } from 'vue-command-palette'
 import Magic from "./Magic.vue";
