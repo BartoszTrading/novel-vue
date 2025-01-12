@@ -12,7 +12,7 @@ import {
   useEditor,
   EditorContent,
   JSONContent,
-  Extension,
+AnyExtension,
 } from "@tiptap/vue-3";
 import { EditorProps } from "@tiptap/pm/view";
 import { Editor as EditorClass } from "@tiptap/core";
@@ -75,7 +75,7 @@ const props = defineProps({
    * Defaults to [].
    */
   extensions: {
-    type: Array as PropType<Extension[]>,
+    type: Array as PropType<AnyExtension[]>,
     default: [],
   },
   /**

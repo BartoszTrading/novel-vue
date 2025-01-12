@@ -99,6 +99,9 @@ export const ALL_SLASH_COMMANDS: SuggestionItem[] = [
     searchTerms: ["subtitle", "small"],
     icon: Heading3,
     command: ({ editor, range }) => {
+      console.log("Heading 3 command")
+      console.log(editor)
+      console.log(range)
       editor
         .chain()
         .focus()

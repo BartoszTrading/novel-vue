@@ -3,7 +3,7 @@
     <div v-if="completion && !isGenerativeLoading" className="flex max-h-[400px]">
           <ScrollArea>
             <div className="prose p-2 px-4 prose-sm">
-              <Markdown>{completion}</Markdown>
+              <Markdown>{{completion}}</Markdown>
             </div>
           </ScrollArea>
         </div>

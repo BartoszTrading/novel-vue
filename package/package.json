@@ -1,6 +1,6 @@
 {
   "name": "@zadanieai/novel-vue",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "author": "Naveen Naidu <mnaveennaidu9927@gmail.com>, Bartosz Marek <bartoszmarekit@gmail.com>",
   "description": "A Vue 3 component for the novel editor",
   "type": "module",
